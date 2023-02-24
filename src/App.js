@@ -1,23 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { ethers } from "ethers";
+import lighthouse from "@lighthouse-web3/sdk";
 
 function App() {
+  const [address, setAddress] = useState("");
+  const connectWallet = async () => {
+    const { ethereum } = window;
+
+    if (!ethereum) {
+      alert("Please install the Metamask Extension!");
+    }
+    try {
+      const accounts = await ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      // await issueCredId(issuerName, accounts[0]);
+      setAddress(accounts[0]);
+    } catch (err) {
+      if (err.code === 4902) {
+        try {
+          const accounts = await ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          // await issueCredId(issuerName, accounts[0]);
+          setAddress(accounts[0]);
+        } catch (err) {
+          alert(err.message);
+        }
+      }
+    }
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      {address == "" ? (
+        <button
+          style={{ justifyContent: "center" }}
+          onClick={() => connectWallet()}
         >
-          Learn React
-        </a>
-      </header>
+          Connect
+        </button>
+      ) : (
+        <span>{address}</span>
+      )}
+      <br />
+      {address != "" && <input type="file" />}
     </div>
   );
 }
