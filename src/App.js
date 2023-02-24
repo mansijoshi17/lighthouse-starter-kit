@@ -4,6 +4,9 @@ import lighthouse from "@lighthouse-web3/sdk";
 
 function App() {
   const [address, setAddress] = useState("");
+  const [fileURL, setFileURL] = React.useState(null);
+  const [cid, setCid] = React.useState("");
+
   const connectWallet = async () => {
     const { ethereum } = window;
 
@@ -44,7 +47,20 @@ function App() {
         <span>{address}</span>
       )}
       <br />
-      {address != "" && <input type="file" />}
+      {address != "" && (
+        <>
+          <input type="file" />
+          <button>decrypt</button>
+        </>
+      )}
+
+      {fileURL ? (
+        <>
+          <a href={fileURL} target="_blank">
+            <img src={fileURL}></img>
+          </a>
+        </>
+      ) : null}
     </div>
   );
 }
